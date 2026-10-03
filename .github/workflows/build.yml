@@ -19,13 +19,22 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Build APK without global daemon
+    - name: Corrige gradle.properties do projeto
       run: |
-        export GRADLE_OPTS="-Xmx2048m"
-        gradle assembleRelease --no-daemon -Dorg.gradle.daemon=false
+        if [ -f gradle.properties ]; then
+          sed -i 's/-XX:MaxPermSize=[^ ]*//g' gradle.properties
+        fi
 
-    - name: Upload APK as Artifact
+    - name: Setup Gradle Oficial
+      uses: gradle/actions/setup-gradle@v3
+      with:
+        gradle-version: '8.7'
+
+    - name: Build APK
+      run: gradle assembleRelease --no-daemon
+
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: APK
-        path: app/build/outputs/apk/release/app-release.apk
+        path: app/build/outputs/apk/**/*.apk
