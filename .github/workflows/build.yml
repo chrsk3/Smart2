@@ -29,13 +29,6 @@ jobs:
     - name: Build APK
       run: ./gradlew assembleRelease
 
-    - name: Upload APK to Releases
-      uses: softprops/action-gh-release@v1
-      with:
-        files: app/build/outputs/apk/release/app-release.apk
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Upload APK as Artifact
       uses: actions/upload-artifact@v3
       with:
